@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int p_of_Espresso = 10, p_of_Latte = 20, p_of_Cappuccino = 30;
+    int qty_of_Espresso, qty_of_Latte, qty_of_Cappuccino;
+
+    int* ptr_Espresso = &qty_of_Espresso;
+    int* ptr_Latte = &qty_of_Latte;
+    int* ptr_Cappuccino = &qty_of_Cappuccino;
+
+    cout << "Enter the quantity of Espresso: ";
+    cin >> *ptr_Espresso;
+
+    cout << "Enter the quantity of Latte: ";
+    cin >> *ptr_Latte;
+
+    cout << "Enter the quantity of Cappuccino: ";
+    cin >> *ptr_Cappuccino;
+
+    int cost_of_Espresso = (*ptr_Espresso) * p_of_Espresso;
+    int cost_of_Latte = (*ptr_Latte) * p_of_Latte;
+    int cost_of_Cappuccino = (*ptr_Cappuccino) * p_of_Cappuccino;
+
+    int total_bill = cost_of_Espresso + cost_of_Latte + cost_of_Cappuccino;
+
+    cout << "Total Bill: "<< total_bill << "\n";
+
+    return 0;
+}
