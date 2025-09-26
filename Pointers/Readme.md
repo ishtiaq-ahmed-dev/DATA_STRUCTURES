@@ -17,3 +17,21 @@ This is a simple C++ program that calculates the total bill for coffee orders ba
 2. Compile the program using a C++ compiler, for example:
    ```bash
    g++ coffee_billing.cpp -o coffee_billing
+Run the executable:
+
+bash
+Copy code
+./coffee_billing
+Enter the quantities for Espresso, Latte, and Cappuccino when prompted.
+
+The program will display the total bill amount.
+
+Example
+yaml
+Copy code
+Enter the quantity of Espresso: 2
+Enter the quantity of Latte: 1
+Enter the quantity of Cappuccino: 3
+Total Bill: 130
+License
+This project is open source and free to use.
