@@ -1,51 +1,36 @@
-# C++ Pointer Examples: Coffee Billing & Secret Key Calculator
+# University C++ Programs  
 
-This repository contains two simple C++ programs demonstrating basic pointer concepts and function pointers.
+This repository contains different C++ programs developed as part of university tasks and practice.  
+Each program demonstrates the use of **pointers, memory allocation, and functions** in C++.  
 
 ---
 
-## 1. Coffee Billing Program
+## 📂 Programs Included  
 
-A simple program to calculate the total bill for coffee orders. It uses pointers to handle user input quantities and calculates the cost based on fixed prices for Espresso, Latte, and Cappuccino.
-
-### How It Works
-
-- Prices for each coffee type are predefined:
-  - Espresso: 10 units
-  - Latte: 20 units
-  - Cappuccino: 30 units
-- The program declares integer variables to store quantities.
-- It uses pointers to these quantity variables to take input from the user.
-- Then, it calculates the cost for each coffee type by multiplying the quantity by its price.
-- Finally, it sums up all costs and displays the total bill.
-
-### Sample Input/Output
-
+### 1. Coffee Shop Billing System (`coffee_billing.cpp`)  
+- **Description:**  
+  Calculates the total bill for coffee orders (Espresso, Latte, Cappuccino).  
+- **Concepts Used:**  
+  - Pointers for handling quantity input  
+  - Basic arithmetic operations  
+- **Sample Input/Output:**
+- 
 Enter the quantity of Espresso: 2
 Enter the quantity of Latte: 1
 Enter the quantity of Cappuccino: 3
-Total Bill: 130
+Total Bill: 120
 
 
 ---
 
-## 2. Secret Key Calculator Program
+### 2. Secret Code Generator (`secret_code.cpp`)  
+- **Description:**  
+Generates a "secret key" by calculating factorial of a number using a function pointer.  
+- **Concepts Used:**  
+- Function pointers  
+- Iterative factorial calculation  
+- **Sample Input/Output:**  
 
-This program calculates the factorial of a number entered by the user, referred to as the "secret key." It demonstrates the use of **function pointers** in C++.
-
-### How It Works
-
-- The function `secret_code(int a)` computes the factorial of the input number `a` using a loop.
-- It multiplies numbers from `a` down to 1 to get the factorial.
-- The program uses a function pointer `ptr_secret_code` to point to the `secret_code` function.
-- The function pointer is then used to call the factorial function.
-
-### Why Use Function Pointers?
-
-- Function pointers allow dynamic function calls.
-- They can be useful in scenarios like callbacks, event handling, or selecting functions at runtime.
-
-### Sample Input/Output
 
 Enter a number: 5
 The secret key is: 120
@@ -53,28 +38,52 @@ The secret key is: 120
 
 ---
 
-## How to Compile and Run
+### 3. Sports Score Tracker (`sports score tracker.cpp`):contentReference[oaicite:2]{index=2}  
+- **Description:**  
+Records and displays runs scored by each player.  
+- **Concepts Used:**  
+- Dynamic memory allocation using `malloc`  
+- Arrays and loops  
+- **Sample Input/Output:**  
 
-### Coffee Billing
 
-```bash
-g++ coffee_billing.cpp -o coffee_billing
-./coffee_billing
+Enter the Total Players participating: 3
+Enter the Score of player 1: 55
+Enter the Score of player 2: 42
+Enter the Score of player 3: 78
+
+Player 1 Runs are 55
+Player 2 Runs are 42
+Player 3 Runs are 78
 
 
-###Secret Key Calculator
+---
 
-g++ secret_code.cpp -o secret_code
-./secret_code
+### 4. Attendance Register (`attendance register.cpp`):contentReference[oaicite:3]{index=3}  
+- **Description:**  
+Keeps track of worker attendance using roll numbers.  
+- **Concepts Used:**  
+- Dynamic memory allocation using `calloc`  
+- Boolean arrays for marking presence  
+- **Sample Input/Output:**  
 
-Summary
 
-Both programs highlight core C++ concepts involving pointers.
+Enter the Number of Total workers: 5
+Enter the Roll No of the Present Workers One by One and Type (0) Once Done:
+1
+3
+5
+0
 
-The first program uses pointers to input and process data stored in variables.
+Roll No 1 is Present.
+Roll No 3 is Present.
+Roll No 5 is Present.
 
-The second program introduces function pointers to call functions dynamically.
+Total Present Workers are :3
+Total Absent Workers are :2
 
-License
+👨‍💻 Author
 
-This project is open source and free to use.
+Ishtiaq Ahmed
+University Student | Artificial Intelligence Enthusiast
+Open Source
