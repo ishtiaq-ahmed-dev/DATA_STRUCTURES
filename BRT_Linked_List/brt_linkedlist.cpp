@@ -18,6 +18,14 @@ public:
     LinkedList() {
         head = nullptr;
     }
+    ~LinkedList() {
+    Node* current = head;
+    while (current != nullptr) {
+        Node* nxt = current->next;
+        delete current;
+        current = nxt;
+    }
+    cout << "Linked list destroyed.\n";}
 
     void insert_at_beginning(int ID) {
         Node* NewNode = new Node(ID);
@@ -37,28 +45,20 @@ public:
         while (current->next != nullptr) {
             current = current->next;
         }
-        current->next = NewNode;
-    }
+        current->next = NewNode;}
 
     void insert_at_position(int ID, int position) {
         if (position == 0) {
             insert_at_beginning(ID);
-            return;
-        }
+            return;}
 
         Node* current = head;
-        int i = 0;
-        while (current != nullptr && i < position - 1) {
-            current = current->next;
-            i++;
-        }
-
+        for (int i =0 ; current != nullptr && i < position -1 ; i++){ 
+        current = current -> next;}
         if (current == nullptr) {
             cout << "Position out of range, inserting at end.\n";
             insert_at_end(ID);
-            return;
-        }
-
+            return;}
         Node* NewNode = new Node(ID);
         NewNode->next = current->next;
         current->next = NewNode;
@@ -67,9 +67,7 @@ public:
     void delete_from_beginning() {
         if (head == nullptr) {
             cout << "List is empty.\n";
-            return;
-        }
-
+            return;}
         Node* temp = head;
         head = head->next;
         delete temp;
@@ -82,7 +80,6 @@ public:
             cout << current->Passenger_ID << " -> ";
             current = current->next;
         }
-
     }
 };
 
@@ -98,5 +95,6 @@ int main() {
     queue.print();
     queue.delete_from_beginning();
     queue.print();
+
     return 0;
 }
