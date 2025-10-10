@@ -102,4 +102,3 @@ Total students: 1
 
 **Ishtiaq Ahmed**  
 Artificial Intelligence Student | C++ & Python Developer | Data Structures Enthusiast
-EOF
