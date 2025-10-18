@@ -2,72 +2,66 @@
 
 This C++ program implements a **Doubly Linked List–based IP Address Management System**, allowing users to **validate**, **store**, and **display** IP addresses from both **console input** and **files**.
 
-It demonstrates practical use of **file handling**, **string parsing**, and **pointer-based data structures**, forming a solid foundation for network-related data processing applications.
+It demonstrates practical use of:
+✔️ File handling  
+✔️ String parsing  
+✔️ Pointer-based data structures  
 
----
+This forms a solid foundation for network-related data processing applications.
 
-## 🛠 Features
+────────────────────────────────────────────
 
-| Operation | Description |
-|------------|-------------|
-| 🧾 **Add from Console** | Enter multiple IP addresses separated by commas (e.g. `192.168.0.1,10.0.0.5`). |
-| 📂 **Add from File** | Load and validate IP addresses directly from a text file. |
-| 🔍 **Validate IP** | Ensures correct format, digit count, and proper placement of dots. |
-| 👁️ **Display from Start** | Prints IP addresses from head to tail. |
-| 👁️ **Display from End** | Prints IP addresses from tail to head. |
-| ❌ **Exit** | Safely terminates the program and releases memory. |
+## 🛠️ Features
 
----
+| Operation                | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| 🧾 Add from Console       | Enter multiple IP addresses separated by commas (e.g. `192.168.0.1,10.0.0.5`) |
+| 📂 Add from File          | Load and validate IP addresses directly from a text file (`ips.txt`)        |
+| 🔍 Validate IP            | Ensures correct format and value range (0–255 per octet)                    |
+| 👁️ Display from Start     | Prints IP addresses from head → tail                                        |
+| 👁️ Display from End       | Prints IP addresses from tail → head                                        |
+| ❌ Exit                   | Safely terminates the program and releases memory                           |
+
+────────────────────────────────────────────
 
 ## 🧩 Code Structure  
 
-### 🔹 **Node Structure**
-Each node represents a single IP address and its connections within the doubly linked list.
+### 🔹 Node Structure
 
-\`\`\`cpp
+Each node represents a single IP address and its links:
+
+```cpp
 struct Node {
-    string ipaddress;   // Stores IP address
-    Node* next;         // Pointer to the next node
-    Node* prev;         // Pointer to the previous node
+    string ipaddress;   // Stores the IP address
+    Node* next;         // Points to next node
+    Node* prev;         // Points to previous node
 };
-\`\`\`
 
----
 
-### 🔹 **DoublyLinkedList Class**
-Encapsulates all core operations of the IP address management system.
+🔹 DoublyLinkedList Class
 
-**Main Methods:**
+Encapsulates all linked list operations.
 
-| Method | Description |
-|---------|-------------|
-| \`insertatbeginning(string ip)\` | Inserts a new IP node at the beginning of the list |
-| \`validate_ip(string ip)\` | Validates the syntax and structure of an IP address |
-| \`add_addresses(string input)\` | Adds multiple IPs entered via console (comma-separated) |
-| \`add_addresses_from_file(string filename)\` | Reads and validates IPs from a file |
-| \`display_from_start()\` | Displays all stored IP addresses (head → tail) |
-| \`display_from_end()\` | Displays all stored IP addresses (tail → head) |
-| \`~DoublyLinkedList()\` | Destructor to free all dynamically allocated memory |
+Method	Purpose
+insert_at_end(string ip)	Inserts an IP address node at the end of the list
+validate_ip(string ip)	Validates IP address format and numerical range
+add_addresses(string input)	Parses and adds multiple comma-separated IPs from console
+add_addresses_from_file(string filename)	Loads IPs from a file like ips.txt
+display_from_start()	Displays IPs from head → tail
+display_from_end()	Displays IPs from tail → head
+~DoublyLinkedList()	Destructor to release memory
 
----
+🔹 Menu-Driven User Interface
 
-### 🔹 **Main Menu Flow**
-The user interacts through a simple console-based menu.
-
-\`\`\`text
 Menu:
 1. Add IP addresses from console
 2. Add IP addresses from file
 3. Display IP addresses from start to end
 4. Display IP addresses from end to start
 5. Exit
-\`\`\`
 
----
+🧪 Example Execution
 
-## 🧮 Example Execution  
-
-\`\`\`
 📋 Menu:
 1. Add IP addresses from console
 2. Add IP addresses from file
@@ -80,45 +74,36 @@ Enter IP addresses separated by commas: 192.168.0.1,256.1.1.1,10.0.0.5
 
 IP Address 1: 192.168.0.1
 ✅ 192.168.0.1 is valid and added to the list
+
 IP Address 2: 256.1.1.1
 ❌ 256.1.1.1 is not a valid IP address
+
 IP Address 3: 10.0.0.5
 ✅ 10.0.0.5 is valid and added to the list
-\`\`\`
 
----
 
-## ⚙️ How to Run  
+⚙️ How to Run
 
-1. **Save the file** as \`ip_address_manager.cpp\`  
-2. **Open terminal** in the same folder  
-3. **Compile and run** the program:
-   \`\`\`bash
-   g++ ip_address_manager.cpp -o ip_manager
-   ./ip_manager
-   \`\`\`
-4. **To test file input**:  
-   - Create a file named \`ips.txt\`  
-   - Add comma-separated IPs inside:
-     \`\`\`
-     192.168.1.1,10.10.10.10,300.1.1.1
-     \`\`\`
-   - Run the program and choose option \`2\`, then enter \`ips.txt\`
+Save the file as ip_address_manager.cpp
 
----
+Open terminal in the project directory
 
-## 🎯 Learning Outcomes  
+Compile and run the program:
+g++ ip_address_manager.cpp -o ip_manager
+./ip_manager
 
-By working on this project, you’ll:  
-✅ Understand the implementation of a **Doubly Linked List** in C++  
-✅ Learn **IP validation logic** using string operations and conditions  
-✅ Practice **file handling** (\`ifstream\`, \`getline\`)  
-✅ Master **dynamic memory management** (\`new\`, \`delete\`, destructor)  
-✅ Design a **menu-driven program** simulating a real-world system  
 
----
+📘 Learning Outcomes
 
-## 👨‍💻 Author  
+By building this project, you'll:
 
-**Ishtiaq Ahmed**  
-Artificial Intelligence Student | C++ & Python Developer | Data Structures Enthusiast
+✅ Understand how doubly linked lists work in C++
+✅ Learn practical IP validation techniques
+✅ Apply file I/O for real-world data processing
+✅ Master memory management using new and delete
+✅ Design a user-friendly menu-driven program
+
+👨‍💻 Author
+
+Ishtiaq Ahmed
+🎓 AI Student • 💻 C++ & Python Developer • 🧠 Data Structures Enthusiast
