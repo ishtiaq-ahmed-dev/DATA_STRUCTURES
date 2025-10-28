@@ -66,10 +66,15 @@ Repeat until one person (the survivor) remains.
 🎯 Learning Outcomes
 
 By completing this project, you’ll:
+
 ✅ Understand circular doubly linked list structure
+
 ✅ Practice pointer manipulation and dynamic memory management
+
 ✅ Implement real-world problem logic using data structures
+
 ✅ Strengthen algorithmic thinking
+
 ✅ Master node insertion and deletion in a circular structure
 
 
