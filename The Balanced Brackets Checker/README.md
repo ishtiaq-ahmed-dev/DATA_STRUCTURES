@@ -1,78 +1,82 @@
-# 🚀 [PROJECT TITLE]
+# 🔢 Bracket Balance Checker (C++)
 
-[![Stars](https://img.shields.io/github/stars/ishtiaq-ahmed-dev/[YOUR-REPO-NAME].svg?style=social)](https://github.com/ishtiaq-ahmed-dev/[YOUR-REPO-NAME]/stargazers)
-[![Forks](https://img.shields.io/github/forks/ishtiaq-ahmed-dev/[YOUR-REPO-NAME].svg?style=social)](https://github.com/ishtiaq-ahmed-dev/[YOUR-REPO-NAME]/network/members)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+This project implements a **Bracket Balance Checker** using a **custom Array-Based Stack** in C++.  
+It validates whether an expression contains properly balanced brackets:
 
-**A concise, one-sentence description of what your project does and who it's for.**
+- **() Round brackets**
+- **{} Curly brackets**
+- **[] Square brackets**
 
----
-
-## 🌟 About The Project
-
-Provide a detailed explanation of your project here.
-
-* **What problem does it solve?**
-* **What are its key features and benefits?**
-* **Why did you build it (the motivation)?**
-
-If possible, include a screenshot or a short GIF of the project in action here!
-
-### 🛠️ Built With
-
-List the major frameworks/libraries used in your project. Include links where possible.
-
-* `[Language/Framework 1]`
-* `[Library/Tool 2]`
-* `[Database/Service 3]`
+This program is useful for:
+✔️ Expression validation  
+✔️ Compiler design basics  
+✔️ Understanding stack data structure  
 
 ---
 
-## 🏃 Getting Started
+## 🚀 Features
 
-This section explains how to set up the project locally.
+### ✔️ Custom Stack (ArrayStack)
+Implements stack operations:
+- `push()`
+- `pop()`
+- `peek()`
+- `isEmpty()`
+- `isFull()`
 
-### Prerequisites
+### ✔️ Balanced Expression Checker
+Checks for valid bracket pairing:
+- `(` matches `)`
+- `{` matches `}`
+- `[` matches `]`
 
-Ensure you have the following software installed on your machine:
+### ✔️ Loop Input Mode
+Enter expressions continuously until you type:
 
-* [Software Name 1] (e.g., Node.js v18+)
-* [Software Name 2] (e.g., Python 3.10+)
-* [Tool 3] (e.g., Git)
-
-### Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/ishtiaq-ahmed-dev/](https://github.com/ishtiaq-ahmed-dev/)[YOUR-REPO-NAME].git
-    ```
-2.  **Navigate to the project directory:**
-    ```bash
-    cd [YOUR-REPO-NAME]
-    ```
-3.  **Install dependencies:**
-    ```bash
-    # Example for Node.js projects
-    npm install
-    
-    # Example for Python projects
-    pip install -r requirements.txt
-    ```
-4.  **[Optional] Configure environment variables:**
-    * Create a `.env` file based on `.env.example`.
-    * Add your API keys or configuration settings.
 
 ---
 
-## 💡 Usage
+## 📂 Code Structure
 
-Show how to use your project. Provide examples of common commands or typical usage scenarios.
+### **ArrayStack class**
+- Uses array of size 20
+- Manages bracket operations
 
-### Running the Application
+### **areBracketsBalanced()**
+Core function to check matching brackets.
 
-```bash
-# Example command to start a web server
-npm run dev
+### **main() loop**
+Keeps taking input until termination.
 
-# Example command to run a script
-python main.py --mode=test
+---
+
+## 🧠 Logic Behind the Program
+
+1. Traverse expression character by character  
+2. Push every opening bracket  
+3. When a closing bracket appears:
+   - Check top of stack  
+   - If match → pop  
+   - If mismatch → expression invalid  
+4. End:
+   - If stack empty → Balanced  
+   - Else → Not Balanced  
+
+---
+
+📘 Learning Outcomes
+
+✔️ Learn stack fundamentals
+
+✔️ Understand bracket-matching algorithms
+
+✔️ Build real-world expression validators
+
+✔️ Strengthen C++ object-oriented logic
+
+---
+
+👨‍💻 Author
+
+Ishtiaq Ahmed
+C++ Developer • AI Student • Data Structures Enthusiast
