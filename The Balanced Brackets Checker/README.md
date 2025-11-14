@@ -1,4 +1,4 @@
-# 🔢 Bracket Balance Checker (C++)
+# 🚀🔢 Bracket Balance Checker (C++)
 
 This project implements a **Bracket Balance Checker** using a **custom Array-Based Stack** in C++.  
 It validates whether an expression contains properly balanced brackets:
