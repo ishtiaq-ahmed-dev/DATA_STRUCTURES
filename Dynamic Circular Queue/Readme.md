@@ -46,7 +46,7 @@ When the queue is full → capacity doubles internally.
 
 ### **resize() Function**
 Copies elements in correct queue order using:
-```cpp
+
 (arr[(frontIdx + i) % capacity])
 
 ---
