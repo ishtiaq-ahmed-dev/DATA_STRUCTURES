@@ -2,249 +2,222 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
-#include <vector>
-#include <algorithm>
-#include <climits>
+#include <sstream>
+
 using namespace std;
 
 /* ===================== DATA STRUCTURE ===================== */
-
-struct StudentNode {
+struct Student {
     int id;
-    string fullName;
-    string department;
+    string name;
+    string dept;
     int semester;
-    float gpa;
+    double cgpa;
     int credits;
     int year;
-    StudentNode* next;
+    Student* next;
 
-    StudentNode(int i, const string& n, const string& d,
-                int s, float g, int c, int y)
-        : id(i), fullName(n), department(d),
-          semester(s), gpa(g), credits(c), year(y), next(nullptr) {}
+    Student(int i, string n, string d, int s, double g, int c, int y)
+        : id(i), name(n), dept(d), semester(s), cgpa(g), credits(c), year(y), next(nullptr) {}
 };
 
-/* ===================== DATABASE CLASS ===================== */
+/* ===================== MEMORY MANAGEMENT ===================== */
 
-class HumanDB {
-public:
-    StudentNode* head;
+void deleteList(Student* head) {
+    while (head) {
+        Student* temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
 
-    HumanDB() : head(nullptr) {}
+Student* cloneList(Student* source) {
+    if (!source) return nullptr;
+    Student* newHead = new Student(source->id, source->name, source->dept, source->semester, source->cgpa, source->credits, source->year);
+    Student* curr = newHead;
+    source = source->next;
+    while (source) {
+        curr->next = new Student(source->id, source->name, source->dept, source->semester, source->cgpa, source->credits, source->year);
+        curr = curr->next;
+        source = source->next;
+    }
+    return newHead;
+}
 
-    /* ---------- ADD STUDENT ---------- */
-    void addStudent(int i, const string& n, const string& d,
-                    int s, float g, int c, int y) {
-        StudentNode* node = new StudentNode(i, n, d, s, g, c, y);
-        if (!head) {
-            head = node;
-            return;
+/* ===================== ITERATIVE MERGE SORT (Stack-Safe) ===================== */
+
+Student* merge(Student* a, Student* b, bool (*comp)(Student*, Student*)) {
+    Student dummy(0, "", "", 0, 0, 0, 0);
+    Student* tail = &dummy;
+    while (a && b) {
+        if (comp(a, b)) { tail->next = a; a = a->next; }
+        else { tail->next = b; b = b->next; }
+        tail = tail->next;
+    }
+    tail->next = (a) ? a : b;
+    return dummy.next;
+}
+
+void iterativeMergeSort(Student** headRef, bool (*comp)(Student*, Student*)) {
+    if (!*headRef || !(*headRef)->next) return;
+    Student* list[32]; 
+    for (int i = 0; i < 32; i++) list[i] = nullptr;
+    Student* curr = *headRef;
+    while (curr) {
+        Student* nextNode = curr->next;
+        curr->next = nullptr;
+        int i;
+        for (i = 0; i < 31 && list[i] != nullptr; i++) {
+            curr = merge(list[i], curr, comp);
+            list[i] = nullptr;
         }
-        StudentNode* t = head;
-        while (t->next) t = t->next;
-        t->next = node;
+        list[i] = curr;
+        curr = nextNode;
     }
+    Student* result = nullptr;
+    for (int i = 0; i < 32; i++) result = merge(list[i], result, comp);
+    *headRef = result;
+}
 
-    /* ---------- LOAD DATA (COUNT-BASED) ---------- */
-    void loadData(const string& filename) {
-        ios::sync_with_stdio(false);
-        cin.tie(nullptr);
+/* ===================== COMPARATORS ===================== */
 
-        ifstream fin(filename);
-        if (!fin) {
-            cerr << "ERROR: Cannot open input file\n";
-            exit(1);
+bool compEnrollment(Student* a, Student* b) {
+    if (a->year != b->year) return a->year < b->year;
+    return a->id < b->id;
+}
+
+bool compDeptAnalysis(Student* a, Student* b) {
+    if (a->dept != b->dept) return a->dept < b->dept;
+    if (a->semester != b->semester) return a->semester < b->semester;
+    return a->cgpa > b->cgpa;
+}
+
+bool compAlpha(Student* a, Student* b) {
+    return a->name < b->name;
+}
+
+/* ===================== REPORT GENERATORS ===================== */
+
+// Report 2: Enrollment
+void generateEnrollmentReport(Student* master) {
+    cout << "  > Generating Enrollment Report..." << endl;
+    Student* copy = cloneList(master);
+    iterativeMergeSort(&copy, compEnrollment);
+    ofstream fout("sorted_by_enrollment.txt");
+    
+    Student* curr = copy;
+    while (curr) {
+        int targetYear = curr->year;
+        double sumGPA = 0;
+        int count = 0;
+        fout << "\n================ ENROLLMENT YEAR: " << targetYear << " ================\n";
+        while (curr && curr->year == targetYear) {
+            fout << "ID: " << curr->id << " | Name: " << setw(20) << left << curr->name << " | GPA: " << curr->cgpa << "\n";
+            sumGPA += curr->cgpa;
+            count++;
+            curr = curr->next;
         }
+        fout << "------------------------------------------------------------\n";
+        fout << "Average CGPA for " << targetYear << " Cohort: " << fixed << setprecision(2) << (sumGPA / count) << "\n";
+    }
+    fout.close();
+    deleteList(copy);
+}
 
-        long long count;
-        fin >> count;
+// Report 3: Department Analysis
+void generateDeptReport(Student* master) {
+    cout << "  > Generating Department Report..." << endl;
+    Student* copy = cloneList(master);
+    iterativeMergeSort(&copy, compDeptAnalysis);
+    ofstream fout("department_analysis.txt");
 
-        for (long long i = 0; i < count; i++) {
-            int id, sem, credits, year;
-            float gpa;
-            string first, last, dept;
+    Student* curr = copy;
+    while (curr) {
+        string d = curr->dept;
+        int count = 0;
+        double sumGPA = 0, sumCred = 0, high = -1, low = 5;
 
-            if (!(fin >> id >> first >> last >> dept >> sem >> gpa >> credits >> year))
-                break;
-
-            if (gpa < 0 || gpa > 4 || sem < 1 || sem > 8)
-                continue;
-
-            addStudent(id, first + " " + last, dept, sem, gpa, credits, year);
+        fout << "\nDEPARTMENT: " << d << "\n";
+        fout << "------------------------------------------------------------\n";
+        while (curr && curr->dept == d) {
+            fout << "Sem " << curr->semester << " | GPA: " << curr->cgpa << " | " << curr->name << "\n";
+            sumGPA += curr->cgpa;
+            sumCred += curr->credits;
+            if (curr->cgpa > high) high = curr->cgpa;
+            if (curr->cgpa < low) low = curr->cgpa;
+            count++;
+            curr = curr->next;
         }
-        fin.close();
+        fout << "\n>>> STATISTICS FOR " << d << " <<<\n";
+        fout << "Total Students: " << count << "\nAverage CGPA: " << (sumGPA / count) 
+             << "\nHighest: " << high << " | Lowest: " << low 
+             << "\nAverage Credits: " << (sumCred / count) << "\n\n";
     }
+    fout.close();
+    deleteList(copy);
+}
 
-    /* ---------- LINKED LIST → VECTOR ---------- */
-    vector<StudentNode*> toVector() {
-        vector<StudentNode*> v;
-        v.reserve(1000000); // helps with large files
-        StudentNode* t = head;
-        while (t) {
-            v.push_back(t);
-            t = t->next;
-        }
-        return v;
-    }
+// Report 4: Performance Tiers
+void generatePerformanceTiers(Student* master, int totalLoaded) {
+    cout << "  > Generating Performance Tiers..." << endl;
+    Student* copy = cloneList(master);
+    iterativeMergeSort(&copy, compAlpha);
+    ofstream fout("performance_tiers.txt");
 
-    /* ---------- SORTING ---------- */
-    vector<StudentNode*> sortByCGPA() {
-        auto v = toVector();
-        sort(v.begin(), v.end(), [](auto a, auto b) {
-            if (a->gpa != b->gpa) return a->gpa > b->gpa;
-            if (a->credits != b->credits) return a->credits > b->credits;
-            return a->id < b->id;
-        });
-        return v;
-    }
+    const char* labels[] = {"ELITE TIER (>= 3.70)", "HIGH ACHIEVERS (3.30-3.69)", "GOOD STANDING (3.00-3.29)", "SATISFACTORY (2.50-2.99)", "NEEDS IMPROVEMENT (< 2.50)"};
+    
+    for (int i = 0; i < 5; i++) {
+        int count = 0;
+        fout << "\n--- " << labels[i] << " ---\n";
+        for (Student* c = copy; c; c = c->next) {
+            bool inTier = false;
+            if (i == 0 && c->cgpa >= 3.70) inTier = true;
+            else if (i == 1 && c->cgpa >= 3.30 && c->cgpa < 3.70) inTier = true;
+            else if (i == 2 && c->cgpa >= 3.00 && c->cgpa < 3.30) inTier = true;
+            else if (i == 3 && c->cgpa >= 2.50 && c->cgpa < 3.00) inTier = true;
+            else if (i == 4 && c->cgpa < 2.50) inTier = true;
 
-    vector<StudentNode*> sortByYear() {
-        auto v = toVector();
-        sort(v.begin(), v.end(), [](auto a, auto b) {
-            if (a->year != b->year) return a->year < b->year;
-            return a->id < b->id;
-        });
-        return v;
-    }
-
-    vector<StudentNode*> sortByDepartment() {
-        auto v = toVector();
-        sort(v.begin(), v.end(), [](auto a, auto b) {
-            if (a->department != b->department) return a->department < b->department;
-            if (a->semester != b->semester) return a->semester < b->semester;
-            return a->gpa > b->gpa;
-        });
-        return v;
-    }
-
-    /* ===================== OUTPUT FILES ===================== */
-
-    void saveRankedByCGPA(const vector<StudentNode*>& v) {
-        ofstream fout("ranked_by_cgpa.txt");
-        int rank = 1;
-
-        fout << "Rank | ID | Name | Dept | Sem | CGPA | Credits | Year\n";
-        for (auto s : v) {
-            fout << rank++ << " "
-                 << s->id << " "
-                 << s->fullName << " "
-                 << s->department << " "
-                 << s->semester << " "
-                 << fixed << setprecision(2) << s->gpa << " "
-                 << s->credits << " "
-                 << s->year << "\n";
-        }
-        fout.close();
-    }
-
-    void saveByEnrollment(const vector<StudentNode*>& v) {
-        ofstream fout("sorted_by_enrollment.txt");
-
-        int curYear = INT_MIN;
-        double sum = 0;
-        int cnt = 0;
-
-        for (auto s : v) {
-            if (s->year != curYear) {
-                if (cnt > 0)
-                    fout << "Average CGPA: " << sum / cnt << "\n\n";
-                curYear = s->year;
-                fout << "Enrollment Year: " << curYear << "\n";
-                sum = 0;
-                cnt = 0;
+            if (inTier) {
+                fout << left << setw(25) << c->name << " | GPA: " << c->cgpa << "\n";
+                count++;
             }
-            fout << s->id << " " << s->fullName << " " << s->gpa << "\n";
-            sum += s->gpa;
-            cnt++;
         }
-        if (cnt > 0)
-            fout << "Average CGPA: " << sum / cnt << "\n";
-
-        fout.close();
+        fout << "Count: " << count << " (" << fixed << setprecision(2) << ((double)count / totalLoaded * 100) << "%)\n";
     }
-
-    void saveDepartmentAnalysis(const vector<StudentNode*>& v) {
-        ofstream fout("department_analysis.txt");
-
-        string curDept = "";
-        int total = 0;
-        double sum = 0, high = 0, low = 4.0, credits = 0;
-
-        for (auto s : v) {
-            if (s->department != curDept) {
-                if (!curDept.empty()) {
-                    fout << "Students=" << total
-                         << " AvgCGPA=" << sum / total
-                         << " High=" << high
-                         << " Low=" << low
-                         << " AvgCredits=" << credits / total << "\n\n";
-                }
-                curDept = s->department;
-                fout << "Department: " << curDept << "\n";
-                total = 0; sum = 0; high = 0; low = 4.0; credits = 0;
-            }
-            fout << s->fullName << " Sem:" << s->semester
-                 << " CGPA:" << s->gpa << "\n";
-
-            total++;
-            sum += s->gpa;
-            credits += s->credits;
-            high = max(high, (double)s->gpa);
-            low = min(low, (double)s->gpa);
-        }
-
-        if (total > 0)
-            fout << "Students=" << total
-                 << " AvgCGPA=" << sum / total
-                 << " High=" << high
-                 << " Low=" << low
-                 << " AvgCredits=" << credits / total << "\n";
-
-        fout.close();
-    }
-
-    void savePerformanceTiers() {
-        auto v = toVector();
-        sort(v.begin(), v.end(), [](auto a, auto b) {
-            return a->fullName < b->fullName;
-        });
-
-        ofstream fout("performance_tiers.txt");
-
-        for (auto s : v) {
-            if (s->gpa >= 3.7) fout << "Elite: ";
-            else if (s->gpa >= 3.3) fout << "High: ";
-            else if (s->gpa >= 3.0) fout << "Good: ";
-            else if (s->gpa >= 2.5) fout << "Satisfactory: ";
-            else fout << "Needs Improvement: ";
-
-            fout << s->fullName << " " << s->gpa << "\n";
-        }
-        fout.close();
-    }
-
-    void freeList() {
-        while (head) {
-            StudentNode* t = head;
-            head = head->next;
-            delete t;
-        }
-    }
-};
+    fout.close();
+    deleteList(copy);
+}
 
 /* ===================== MAIN ===================== */
 
 int main() {
-    HumanDB db;
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    string path = "/Users/ishtiaqahmed/Desktop/DSA LAB TASK/output/students_data.txt";
+    ifstream inFile(path);
+    if (!inFile) return 1;
 
-    db.loadData("students_data.txt");
+    Student *head = nullptr, *tail = nullptr;
+    string line; getline(inFile, line); 
+    int loaded = 0;
+    while (getline(inFile, line)) {
+        stringstream ss(line);
+        int id, sem, cr, yr; double g; string fn, ln, dp;
+        if (ss >> id >> fn >> ln >> dp >> sem >> g >> cr >> yr) {
+            Student* n = new Student(id, fn + " " + ln, dp, sem, g, cr, yr);
+            if (!head) head = tail = n; else { tail->next = n; tail = n; }
+            loaded++;
+        }
+    }
+    inFile.close();
+    cout << "Loaded " << loaded << " records." << endl;
 
-    db.saveRankedByCGPA(db.sortByCGPA());
-    db.saveByEnrollment(db.sortByYear());
-    db.saveDepartmentAnalysis(db.sortByDepartment());
-    db.savePerformanceTiers();
+    if (head) {
+        generateEnrollmentReport(head);
+        generateDeptReport(head);
+        generatePerformanceTiers(head, loaded);
+    }
 
-    db.freeList();
+    deleteList(head);
+    cout << "All reports complete." << endl;
     return 0;
 }
