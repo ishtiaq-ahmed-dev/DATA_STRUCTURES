@@ -75,18 +75,13 @@ Design and implement a matchmaking engine that:
 g++ -o arena arena.cpp
 ```
 
-### Running
+### Running the Program
+
+**Method 1: Direct Input (Console)**
 ```bash
-./arena < input.txt
+./arena
 ```
-
-### Input Format
-```
-<Q>                          # Number of commands
-<COMMAND> <parameters>       # Each command on new line
-```
-
-### Example
+Then type your commands directly:
 ```
 5
 JOIN 50 Ares 120
@@ -96,7 +91,37 @@ STATUS 50
 STATS
 ```
 
-### Output
+**Method 2: Using Input File (Optional)**
+```bash
+./arena < input.txt
+```
+
+**Method 3: Pipe Input**
+```bash
+echo "3
+JOIN 50 Ares 120
+STATUS 50
+STATS" | ./arena
+```
+
+### Input Format
+```
+<Q>                          # Number of commands
+<COMMAND> <parameters>       # Each command on new line
+```
+
+### Example Session
+**Input:**
+```
+5
+JOIN 50 Ares 120
+JOIN 20 Luna 100
+MATCH 25
+STATUS 50
+STATS
+```
+
+**Output:**
 ```
 JOINED
 JOINED
@@ -160,6 +185,40 @@ HEIGHT 2
 LEAVES 2
 ```
 
+### Test Case 2: Edge Cases
+**Input:**
+```
+10
+JOIN 100 Hero 200
+JOIN 100 Duplicate 150
+LEAVE 999
+STATUS 999
+MATCH 100
+NEXT 200
+PREV 50
+KTH 5
+RANGE 50 150
+STATS
+```
+
+**Output:**
+```
+JOINED
+DUPLICATE
+NOT FOUND
+NOT FOUND
+EMPTY
+NONE
+NONE
+OUT OF RANGE
+100 Hero 200
+PLAYERS 1
+MIN 100
+MAX 100
+HEIGHT 0
+LEAVES 1
+```
+
 ## 🎓 Educational Value
 
 This project demonstrates:
@@ -180,25 +239,41 @@ This project demonstrates:
 
 ## 📝 Command Reference
 
-| Command | Syntax | Description |
-|---------|--------|-------------|
-| JOIN | `JOIN <rating> <name> <hp>` | Add player |
-| LEAVE | `LEAVE <rating>` | Remove player |
-| STATUS | `STATUS <rating>` | Query player info |
-| DAMAGE | `DAMAGE <rating> <amount>` | Reduce HP |
-| HEAL | `HEAL <rating> <amount>` | Increase HP |
-| MATCH | `MATCH <X>` | Find closest opponent |
-| NEXT | `NEXT <X>` | Find next higher rating |
-| PREV | `PREV <X>` | Find next lower rating |
-| RANGE | `RANGE <L> <R>` | List players in range |
-| RANK | `RANK <X>` | Count players below X |
-| KTH | `KTH <k>` | Find k-th player |
-| DUEL | `DUEL <A> <B>` | Path distance |
-| STATS | `STATS` | System statistics |
+| Command | Syntax | Description | Output |
+|---------|--------|-------------|--------|
+| JOIN | `JOIN <rating> <name> <hp>` | Add player | `JOINED` or `DUPLICATE` |
+| LEAVE | `LEAVE <rating>` | Remove player | `LEFT` or `NOT FOUND` |
+| STATUS | `STATUS <rating>` | Query player info | `<rating> <name> <hp>` or `NOT FOUND` |
+| DAMAGE | `DAMAGE <rating> <amount>` | Reduce HP | `DAMAGED <new_hp>` or `NOT FOUND` |
+| HEAL | `HEAL <rating> <amount>` | Increase HP | `HEALED <new_hp>` or `NOT FOUND` |
+| MATCH | `MATCH <X>` | Find closest opponent | `<rating> <name> <hp>` or `EMPTY` |
+| NEXT | `NEXT <X>` | Find next higher rating | `<rating> <name> <hp>` or `NONE` |
+| PREV | `PREV <X>` | Find next lower rating | `<rating> <name> <hp>` or `NONE` |
+| RANGE | `RANGE <L> <R>` | List players in range | Player list or `EMPTY` |
+| RANK | `RANK <X>` | Count players below X | `<count>` |
+| KTH | `KTH <k>` | Find k-th player | `<rating> <name> <hp>` or `OUT OF RANGE` |
+| DUEL | `DUEL <A> <B>` | Path distance | `DIST <d>` or `NOT FOUND` |
+| STATS | `STATS` | System statistics | Multiple lines with stats |
+
+## 🐛 Known Limitations
+
+- Tree can become unbalanced with sequential insertions (no auto-balancing)
+- Memory cleanup on program exit could be improved with destructor
+- Maximum input size limited to 200,000 operations
+
+## 🚀 Future Improvements
+
+- Implement AVL or Red-Black tree for guaranteed O(log n) operations
+- Add destructor for proper memory cleanup
+- Implement bulk operations for efficiency
+- Add persistent storage for player data
+- Optimize with augmented BST (storing subtree sizes in nodes)
 
 ## 👨‍💻 Author
 
 **Ishtiaq Ahmed**
+
+Data Structures Lab - Final Exam Project
 
 ## 📄 License
 
@@ -210,6 +285,12 @@ This project is part of a Data Structures Lab Final Exam and is intended for edu
 - Binary Search Tree fundamentals
 - Competitive programming concepts
 
+## 📞 Contact
+
+For questions or feedback, feel free to reach out or open an issue on GitHub.
+
 ---
 
 *Built with ❤️ for learning Data Structures and Algorithms*
+
+**⭐ If you found this helpful, please star the repository!**
